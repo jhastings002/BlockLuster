@@ -8,7 +8,6 @@
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BlockLuster.Accessors\BlockLuster.Accessors.csproj" />
     <ProjectReference Include="..\BlockLuster.Managers\BlockLuster.Managers.csproj" />
   </ItemGroup>
   <ItemGroup>
