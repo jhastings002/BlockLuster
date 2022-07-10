@@ -8,7 +8,7 @@ namespace BlockLuster.EntityFramework
 
         public string MovieId { get; set; } = string.Empty;
 
-        public DateOnly RentalDate { get; set; }
+        public DateTime RentalDate { get; set; }
 
         public decimal TotalCost { get; set; }
 

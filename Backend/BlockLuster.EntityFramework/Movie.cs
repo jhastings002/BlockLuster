@@ -14,7 +14,7 @@ namespace BlockLuster.EntityFramework
 
         public decimal DailyRate { get; set; }
 
-        public string? PictureLocation { get; set; } // Not Implemented
+        public string? PictureLocation { get; set; } = null; // Not Implemented
 
         public bool IsAvailable { get; set; }
     }

@@ -13,7 +13,7 @@ namespace BlockLuster.Accessors.Interfaces
 
         Movie GetMovie(string id);
 
-        void AddMovie(Movie movie);
+        Movie AddMovie(Movie movie);
 
         bool RemoveMovie(string id);
 

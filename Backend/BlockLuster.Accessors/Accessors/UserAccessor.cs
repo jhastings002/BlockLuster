@@ -14,14 +14,14 @@ namespace BlockLuster.Accessors.Accessors
         
         }
 
-        public bool DeactivateAccount(string userId)
+        public bool UpdateUser(AspNetUser updatingUser)
         {
             return UsingDatabaseContext(db => {
 
-                var user = db.AspNetUsers.Where(x => x.Id == userId).FirstOrDefault();
+                var user = db.AspNetUsers.Where(x => x.Id == updatingUser.Id).FirstOrDefault();
                 if(user != null)
                 {
-                    user.IsDeactivated = true;
+                    db.AspNetUsers.Update(user);
                     db.SaveChanges();
                 }
 
@@ -29,19 +29,5 @@ namespace BlockLuster.Accessors.Accessors
             });
         }
 
-        public bool ReactivateAccount(string userId)
-        {
-            return UsingDatabaseContext(db => {
-
-                var user = db.AspNetUsers.Where(x => x.Id == userId).FirstOrDefault();
-                if (user != null)
-                {
-                    user.IsDeactivated = false;
-                    db.SaveChanges();
-                }
-
-                return false;
-            });
-        }
     }
 }

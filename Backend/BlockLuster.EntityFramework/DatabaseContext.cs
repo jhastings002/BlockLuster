@@ -11,9 +11,21 @@ namespace BlockLuster.Accessors.EntityFramework
         {
             base.OnConfiguring(optionsBuilder);
 
+            var connectionString = Config.SqlServerConnectionString;
+
             optionsBuilder.UseSqlServer(new SqlConnection
             {
-                ConnectionString = Config.SqlServerConnectionString
+                ConnectionString = connectionString
+            });
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserRental>().HasKey(ur => new
+            {
+                ur.UserId,
+                ur.MovieId,
+                ur.RentalDate
             });
         }
 

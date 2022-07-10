@@ -21,12 +21,13 @@ namespace BlockLuster.Accessors.Accessors
             });
         }
 
-        public void AddMovie(Movie movie) 
-        { 
-            UsingDatabaseContext(db => {
-                db.Movies.Add(movie);
+        public Movie AddMovie(Movie movie) 
+        {
+            movie.Id = Guid.NewGuid().ToString();
+            return UsingDatabaseContext(db => {
+                var result = db.Movies.Add(movie);
                 db.SaveChanges();
-                return true; 
+                return result.Entity; 
             }); 
         }
 
@@ -68,7 +69,7 @@ namespace BlockLuster.Accessors.Accessors
             {
                 MovieId = movieId,
                 UserId = userId,
-                RentalDate = DateOnly.FromDateTime(DateTime.Now),
+                RentalDate = DateTime.Now.Date,
                 TotalCost = 0,
                 IsReturned = false
             };

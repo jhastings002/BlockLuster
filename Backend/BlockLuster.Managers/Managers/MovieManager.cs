@@ -1,4 +1,5 @@
 ﻿using BlockLuster.Accessors.Interfaces;
+using BlockLuster.EntityFramework;
 using BlockLuster.Managers.Interfaces;
 
 namespace BlockLuster.Managers.Managers
@@ -10,6 +11,18 @@ namespace BlockLuster.Managers.Managers
         {
             _movieAccessor = movieAccessor;
         }
+
+        public List<Movie> GetCatalog() { throw new NotImplementedException(); }
+
+        public Movie GetMovie() { throw new NotImplementedException(); }
+
+        public bool AddMovie() { throw new NotImplementedException(); }
+
+        public bool RemoveMovie() { throw new NotImplementedException(); }
+
+        public bool RentMovie() { throw new NotImplementedException(); }
+
+        public bool ReturnMovie() { throw new NotImplementedException(); }
 
         public string TestMe(string input)
         {
