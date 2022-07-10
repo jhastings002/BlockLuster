@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using BlockLuster.Common;
+using BlockLuster.EntityFramework;
 
 namespace BlockLuster.Accessors.EntityFramework
 {
@@ -15,5 +16,9 @@ namespace BlockLuster.Accessors.EntityFramework
                 ConnectionString = Config.SqlServerConnectionString
             });
         }
+
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<Movie> Movies { get; set; }
+        public virtual DbSet<UserRental> UserRentals { get; set; }
     }
 }

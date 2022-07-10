@@ -4,9 +4,9 @@ namespace BlockLuster.Common
 {
     public static class Config
     {
-        public static string SqlServerConnectionString => GetConfigValue("ConnectionString:Database");
+        public static string SqlServerConnectionString => GetConfigValue("ConnectionStrings:Database");
 
-        static IConfiguration _cachedConfig;
+        static IConfiguration? _cachedConfig;
 
         private static IConfiguration Configuration
         {
@@ -19,6 +19,7 @@ namespace BlockLuster.Common
                         .AddJsonFile("appsettings.Development.json", true, true)
                         .AddJsonFile($"appsettings.{Environment.UserName}.json", true, true)
                         .AddEnvironmentVariables();
+
                     _cachedConfig = builder.Build();
                 }
 

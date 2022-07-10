@@ -31,7 +31,7 @@ namespace BlockLuster
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            input = input ?? data?.name;
+            input = input ?? data?.input;
 
             string responseMessage = $"{_userManager.TestMe(input)}";
             return new OkObjectResult(responseMessage);
