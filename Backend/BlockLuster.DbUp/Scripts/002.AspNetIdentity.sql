@@ -3,6 +3,8 @@ GO
 
 CREATE TABLE [AspNetUsers] (
     [Id] nvarchar(450) NOT NULL,
+    [FirstName] nvarchar(256) NULL,
+    [LastName] nvarchar(256) NULL,
     [UserName] nvarchar(256) NULL,
     [IsAdmin] bit NULL,
     [NormalizedUserName] nvarchar(256) NULL,

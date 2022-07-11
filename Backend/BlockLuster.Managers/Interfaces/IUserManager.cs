@@ -9,7 +9,7 @@ namespace BlockLuster.Managers.Interfaces
 {
     public interface IUserManager
     {
-        void SignUpUser(AspNetUser user);
+        Task<string> SignUpUserAsync(string firstName, string lastName, string email, string password);
 
         void DeactivateUser(string userId);
 

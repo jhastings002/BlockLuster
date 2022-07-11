@@ -16,6 +16,21 @@ namespace BlockLuster.Common.SecurityService
             _userManager = userManager;
         }
 
+        public async Task<string> SignUpAsync(AspNetUser user, string password)
+        {
+            user.Id = Guid.NewGuid().ToString();
+            var result = await _userManager.CreateAsync(user, password);
+            if (result.Succeeded) { 
+                var loaded = await _userManager.FindByEmailAsync(user.Id);
+            }
+            else
+            {
+                throw new InvalidOperationException("Unable To Create Email");
+            }
+
+            return password;
+        }
+
         public async Task<string> SignInAsync(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -36,8 +51,10 @@ namespace BlockLuster.Common.SecurityService
 
                 var signingCreds = new SigningCredentials(
                     new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes("eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY1NzQyMDc0MywiaWF0IjoxNjU3NDIwNzQzfQ.rjKh6QJYAHpUdxONj0ycuFEgO_Pzq8N2KIav5NCPjsk")), SecurityAlgorithms.HmacSha256Signature);
-                var jwtToken = tokenHandler.CreateJwtSecurityToken(null, null, null, DateTime.UtcNow, DateTime.Now.AddDays(1), DateTime.UtcNow, signingCreds);
+                        Encoding.UTF8.GetBytes("eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoidGVzdCIsIklzc3VlciI6InRlc3QiLCJVc2VybmFtZSI6InRlc3QiLCJleHAiOjE3NTc0MjA3NDMsImlhdCI6MTY1NzQyMDc0M30.kdH3wDBWGy7WOcjV6au6wuqMC-qSPmwegHNfnJ8iNos")), 
+                    SecurityAlgorithms.HmacSha256Signature);
+
+                var jwtToken = tokenHandler.CreateJwtSecurityToken("http://localhost", "BlockLuster", claims, DateTime.UtcNow, DateTime.Now.AddDays(1), DateTime.UtcNow, signingCreds);
 
                 return tokenHandler.WriteToken(jwtToken);
             }

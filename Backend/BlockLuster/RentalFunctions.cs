@@ -6,8 +6,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using BlockLuster.Managers.Interfaces;
+using Newtonsoft.Json;
 
 namespace BlockLuster
 {
@@ -19,44 +19,189 @@ namespace BlockLuster
         {
             _movieManager = movieManager;
         }
+
         [FunctionName("GetCatalog")]
-        public static async Task<IActionResult> GetCatalog (
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+        public IActionResult GetCatalog(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("Getting Movie Catalog");
+            try
+            {
+                var result = _movieManager.GetCatalog();
 
-            string name = req.Query["name"];
+                if (result != null && result.Count > 0)
+                {
+                    return new OkObjectResult(JsonConvert.SerializeObject(result));
+                }
+                else
+                {
+                    return new NotFoundResult();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex.Message);
+                return new BadRequestResult();
+            }
+        }
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+        [FunctionName("GetMovie")]
+        public IActionResult GetMovie(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            log.LogInformation("Getting Movie Catalog");
+            try
+            {
+                string movieId = req.Query["movieId"];
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This is the get Catalog endpoint.";
+                if(movieId == null)
+                {
+                    return new BadRequestResult();
+                }
 
-            return new OkObjectResult(responseMessage);
+                var result = _movieManager.GetMovie(movieId);
+
+                if (result != null)
+                {
+                    return new OkObjectResult(JsonConvert.SerializeObject(result));
+                }
+                else
+                {
+                    return new NotFoundResult();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex.Message);
+                return new BadRequestResult();
+            }
+        }
+
+        [FunctionName("AddMovie")]
+        public async Task<IActionResult> AddMovieAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            log.LogInformation("Getting Movie Catalog");
+
+            //Admin check
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                dynamic data = JsonConvert.DeserializeObject(requestBody);
+
+                if(data == null)
+                {
+                    return new BadRequestResult();
+                }
+                var movie = new EntityFramework.Movie
+                {
+                    Title = data.Title,
+                    Description = data.Description,
+                    Rating = data.Rating,
+                    DailyRate = data.DailyRate,
+                    IsAvailable = true
+                };
+
+                var result = _movieManager.AddMovie(movie);
+
+                if (result)
+                {
+                    return new OkResult();
+                }
+                else
+                {
+                    return new NotFoundResult();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex.Message);
+                return new BadRequestResult();
+            }
+        }
+
+        [FunctionName("RemoveMovie")]
+        public async Task<IActionResult> RemoveMovie(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+
+            string movieId = req.Query["movieId"];
+            //Admin check
+
+            log.LogInformation($"Removie Movie: {movieId} ");
+        
+            try
+            {
+                var result = _movieManager.RemoveMovie(movieId);
+
+                if (result)
+                {
+                    return new OkResult();
+                }
+                else
+                {
+                    return new NotFoundResult();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex.Message);
+                return new BadRequestResult();
+            }
         }
 
         [FunctionName("RentMovie")]
-        public static async Task<IActionResult> RentMovie(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+        public async Task<IActionResult> RentMovie(
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("Renting Movie");
+            // user logged in check
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                dynamic data = JsonConvert.DeserializeObject(requestBody);
+                var movieId = data?.MovieId;
+                var userId = data?.UserId;
 
-            string name = req.Query["movieId"];
+                _movieManager.RentMovie(movieId, userId);
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+                    return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex.Message);
+                return new BadRequestResult();
+            }
+        }
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}.  This is the Rent Movie endpoint.";
+        [FunctionName("ReturnMovie")]
+        public async Task<IActionResult> ReturnMovie(
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            ILogger log)
+        {
+            log.LogInformation("Returning Movie");
+            // user logged in check
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                dynamic data = JsonConvert.DeserializeObject(requestBody);
+                var movieId = data?.MovieId;
+                var userId = data?.UserId;
 
-            return new OkObjectResult(responseMessage);
+                _movieManager.ReturnMovie(movieId, userId);
+
+                return new OkResult();
+            }
+            catch (Exception ex)
+            {
+                log.LogError(ex.Message);
+                return new BadRequestResult();
+            }
         }
 
         [FunctionName("Rental_TestMe")]

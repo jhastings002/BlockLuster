@@ -5,13 +5,11 @@ namespace BlockLuster.Accessors.Accessors
 {
     public class UserAccessor : AccessorBase, IUserAccessor
     {
-        public bool SignUp(AspNetUser user) { 
-            
+        public AspNetUser GetUser(string userId)
+        {
             return UsingDatabaseContext(db => {
-                db.AspNetUsers.Add(user);
-                return true; 
-            }); 
-        
+                return db.AspNetUsers.Where(x => x.Id == userId).First();
+            });
         }
 
         public bool UpdateUser(AspNetUser updatingUser)

@@ -9,7 +9,7 @@ namespace BlockLuster.Accessors.Interfaces
 {
     public interface IUserAccessor : IAccessorBase
     {
-        bool SignUp(AspNetUser user);
+        AspNetUser GetUser(string userId);
         bool UpdateUser(AspNetUser updatingUser);
     }
 }

@@ -6,15 +6,15 @@ namespace BlockLuster.Managers.Interfaces
     {
         List<Movie> GetCatalog();
 
-        Movie GetMovie();
+        Movie GetMovie(string id);
 
-        bool AddMovie();
+        bool AddMovie(Movie movie);
 
-        bool RemoveMovie();
+        bool RemoveMovie(string id);
 
-        bool RentMovie();
+        void RentMovie(string movieId, string userId);
 
-        bool ReturnMovie();
+        void ReturnMovie(string movieId, string userId);
 
         string TestMe(string input);
     }

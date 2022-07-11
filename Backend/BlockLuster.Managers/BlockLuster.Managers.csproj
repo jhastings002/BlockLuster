@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlockLuster.Accessors\BlockLuster.Accessors.csproj" />
+    <ProjectReference Include="..\BlockLuster.Common\BlockLuster.Common.Shared.csproj" />
   </ItemGroup>
 
 </Project>

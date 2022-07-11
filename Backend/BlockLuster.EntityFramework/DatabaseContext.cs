@@ -7,6 +7,13 @@ namespace BlockLuster.Accessors.EntityFramework
 {
     public class DatabaseContext : DbContext
     {
+        public DatabaseContext(DbContextOptions<DatabaseContext>options)
+            : base(options)
+        { }
+
+        public DatabaseContext()        
+            :base()
+        { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
