@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using BlockLuster.Managers.Interfaces;
 using BlockLuster.EntityFramework;
 using BlockLuster.Common.SecurityService;
+using BlockLuster.ResponsesAndRequests;
 
 namespace BlockLuster
 {
@@ -41,12 +42,20 @@ namespace BlockLuster
 
                 var token = await _userManager.SignUpUserAsync(firstName, lastName, email, password);
 
-                return new OkObjectResult(token);
+                return new OkObjectResult(JsonConvert.SerializeObject(new SigninResponse()
+                {
+                    Success = true,
+                    Token = token,
+                }));
             }
             catch(Exception ex)
             {
                 log.LogError(ex.Message);
-                return new BadRequestResult();
+                return new BadRequestObjectResult(JsonConvert.SerializeObject(new SigninResponse()
+                {
+                   Success = false,
+                   Token = null,
+                }));
             }
         }
 
@@ -63,14 +72,21 @@ namespace BlockLuster
                 string password = data?.password;
                 string email = data?.email;
 
-                var token = _securityService.SignInAsync(email, password);
+                var token = await _securityService.SignInAsync(email, password);
 
-                return new OkObjectResult(token);
+                return new OkObjectResult(JsonConvert.SerializeObject(new SigninResponse{
+                    Success = true,
+                    Token = token,
+                }));
             }
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
-                return new BadRequestResult();
+                return new BadRequestObjectResult(JsonConvert.SerializeObject(new SigninResponse
+                {
+                    Success = false,
+                    Token = null,
+                }));
             }
         }
 
