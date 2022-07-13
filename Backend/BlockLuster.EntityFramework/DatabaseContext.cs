@@ -28,11 +28,12 @@ namespace BlockLuster.Accessors.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserRental>().HasKey(ur => new
+            modelBuilder.Entity<UserRental>(ur => 
             {
-                ur.UserId,
-                ur.MovieId,
-                ur.RentalDate
+                ur.Property(x => x.Id).HasColumnName("Id")
+                .HasColumnType("bigint")
+                .ValueGeneratedOnAdd()
+                .UseIdentityColumn();
             });
         }
 

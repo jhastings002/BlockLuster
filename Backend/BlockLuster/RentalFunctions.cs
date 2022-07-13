@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using BlockLuster.Managers.Interfaces;
 using Newtonsoft.Json;
+using BlockLuster.Common.Shared.ResponsesAndRequests;
+using System.Collections.Generic;
+using BlockLuster.EntityFramework;
 
 namespace BlockLuster
 {
@@ -109,7 +112,7 @@ namespace BlockLuster
 
                 if (result)
                 {
-                    return new OkResult();
+                    return new OkObjectResult(true);
                 }
                 else
                 {
@@ -165,17 +168,19 @@ namespace BlockLuster
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 dynamic data = JsonConvert.DeserializeObject(requestBody);
-                var movieId = data?.MovieId;
-                var userId = data?.UserId;
+                var moviesIds = data.MovieIds;
+                var userId = data.UserId;
 
-                _movieManager.RentMovie(movieId, userId);
+                var request = new RentMoviesRequest { MovieIds = moviesIds.ToObject<string[]>(), UserId = userId };
 
-                    return new OkResult();
+                var rentedMovies = _movieManager.RentMovie(request);
+
+                return new OkObjectResult(JsonConvert.SerializeObject(rentedMovies));
             }
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
-                return new BadRequestResult();
+                return new BadRequestObjectResult(JsonConvert.SerializeObject(new List<Movie>()));
             }
         }
 
@@ -190,17 +195,17 @@ namespace BlockLuster
             {
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 dynamic data = JsonConvert.DeserializeObject(requestBody);
-                var movieId = data?.MovieId;
-                var userId = data?.UserId;
+                string movieId = data.MovieId;
+                string userId = data.UserId;
 
-                _movieManager.ReturnMovie(movieId, userId);
+                var rentedMovies = _movieManager.ReturnMovie(movieId, userId);
 
-                return new OkResult();
+                return new OkObjectResult(JsonConvert.SerializeObject(rentedMovies));
             }
             catch (Exception ex)
             {
                 log.LogError(ex.Message);
-                return new BadRequestResult();
+                return new BadRequestObjectResult(JsonConvert.SerializeObject(new List<Movie>()));
             }
         }
 

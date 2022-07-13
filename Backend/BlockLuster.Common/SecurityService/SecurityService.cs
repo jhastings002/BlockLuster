@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using BlockLuster.Common.Shared.ResponsesAndRequests;
 
 namespace BlockLuster.Common.SecurityService
 {
@@ -31,7 +32,17 @@ namespace BlockLuster.Common.SecurityService
             return password;
         }
 
-        public async Task<string> SignInAsync(string email, string password)
+        public async Task UpdatePassword(string userId, string oldPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException("Unable To Update User");
+            }
+        }
+
+        public async Task<SigninResponse> SignInAsync(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
@@ -56,7 +67,19 @@ namespace BlockLuster.Common.SecurityService
 
                 var jwtToken = tokenHandler.CreateJwtSecurityToken("http://localhost", "BlockLuster", claims, DateTime.UtcNow, DateTime.Now.AddDays(1), DateTime.UtcNow, signingCreds);
 
-                return tokenHandler.WriteToken(jwtToken);
+                return new SigninResponse
+                {
+                    Success = true,
+                    User = new User()
+                    {
+                        Id = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email
+                    },
+                    isAdmin = user.IsAdmin,
+                    Token = tokenHandler.WriteToken(jwtToken)
+                };
             }
             else
             {

@@ -12,10 +12,12 @@
     <None Remove="Scripts\002.AspNetIdentity.sql" />
     <None Remove="Scripts\003.CreateMovieRentalTable.sql" />
     <None Remove="Scripts\004.AddIsDeactivatedToUserTable.sql" />
+    <None Remove="Scripts\005.SeedAdmin.sql" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Scripts\001.CreateMovieTable.sql" />
+    <EmbeddedResource Include="Scripts\005.SeedAdmin.sql" />
     <EmbeddedResource Include="Scripts\004.AddIsDeactivatedToUserTable.sql" />
     <EmbeddedResource Include="Scripts\002.AspNetIdentity.sql" />
     <EmbeddedResource Include="Scripts\003.CreateMovieRentalTable.sql" />

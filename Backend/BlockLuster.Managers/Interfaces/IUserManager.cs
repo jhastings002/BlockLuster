@@ -1,4 +1,5 @@
-﻿using BlockLuster.EntityFramework;
+﻿using BlockLuster.Common.Shared.ResponsesAndRequests;
+using BlockLuster.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,11 @@ namespace BlockLuster.Managers.Interfaces
 {
     public interface IUserManager
     {
-        Task<string> SignUpUserAsync(string firstName, string lastName, string email, string password);
+        Task<SigninResponse> SignUpUserAsync(string firstName, string lastName, string email, string password);
+
+        void UpdateProfile(string userId, string firstName, string lastName);
+
+        Task UpdatePassword(string userId, string oldPassword, string newPassword);
 
         void DeactivateUser(string userId);
 

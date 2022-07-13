@@ -19,6 +19,8 @@ namespace BlockLuster.Accessors.Accessors
                 var user = db.AspNetUsers.Where(x => x.Id == updatingUser.Id).FirstOrDefault();
                 if(user != null)
                 {
+                    user.FirstName = updatingUser.FirstName;
+                    user.LastName = updatingUser.LastName;
                     db.AspNetUsers.Update(user);
                     db.SaveChanges();
                 }

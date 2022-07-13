@@ -1,15 +1,13 @@
-﻿using BlockLuster.EntityFramework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BlockLuster.Common.Shared.ResponsesAndRequests;
+using BlockLuster.EntityFramework;
 
 namespace BlockLuster.Common.SecurityService
 {
     public interface ISecurityService
     {
         Task<string> SignUpAsync(AspNetUser user, string password);
-        Task<string> SignInAsync(string email, string password);
+
+        Task UpdatePassword(string userId, string oldPassword, string newPassword);
+        Task<SigninResponse> SignInAsync(string email, string password);
     }
 }

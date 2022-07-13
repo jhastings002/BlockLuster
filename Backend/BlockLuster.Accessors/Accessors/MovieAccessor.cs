@@ -53,6 +53,11 @@ namespace BlockLuster.Accessors.Accessors
                 var movie = db.Movies.Where(x => x.Id == updateMovie.Id).FirstOrDefault();
                 if (movie != null)
                 {
+                    movie.Title = updateMovie.Title;
+                    movie.PictureLocation = updateMovie.PictureLocation;
+                    movie.Rating = updateMovie.Rating;
+                    movie.DailyRate = updateMovie.DailyRate;
+                    movie.IsAvailable = updateMovie.IsAvailable;
                     db.Movies.Update(movie);
                     db.SaveChanges();
                     return true;
@@ -69,7 +74,7 @@ namespace BlockLuster.Accessors.Accessors
             {
                 MovieId = movieId,
                 UserId = userId,
-                RentalDate = DateTime.Now.Date,
+                RentalDate = DateTime.Now,
                 TotalCost = 0,
                 IsReturned = false
             };
@@ -80,6 +85,14 @@ namespace BlockLuster.Accessors.Accessors
 
                 return true;
 
+            });
+        }
+
+        public List<UserRental> UserRentals(string userId)
+        {
+            return UsingDatabaseContext(db =>
+            {
+                return db.UserRentals.Where(x => x.UserId == userId && x.IsReturned == false).ToList();
             });
         }
 
@@ -99,6 +112,5 @@ namespace BlockLuster.Accessors.Accessors
 
             });
         }
-
     }
 }

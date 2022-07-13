@@ -1,4 +1,5 @@
-﻿using BlockLuster.EntityFramework;
+﻿using BlockLuster.Common.Shared.ResponsesAndRequests;
+using BlockLuster.EntityFramework;
 
 namespace BlockLuster.Managers.Interfaces
 {
@@ -12,9 +13,11 @@ namespace BlockLuster.Managers.Interfaces
 
         bool RemoveMovie(string id);
 
-        void RentMovie(string movieId, string userId);
+        List<Movie> RentMovie(RentMoviesRequest rentMoviesRequest);
 
-        void ReturnMovie(string movieId, string userId);
+        List<Movie> GetRentedMovies(string userId);
+
+        List<Movie> ReturnMovie(string movieId, string userId);
 
         string TestMe(string input);
     }

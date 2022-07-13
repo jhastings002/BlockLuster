@@ -22,5 +22,7 @@ namespace BlockLuster.Accessors.Interfaces
         void RentMovie(string id, string userId);
 
         bool ReturnMovie(string id, string userId);
+
+        List<UserRental> UserRentals(string userId);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BlockLuster.Accessors.Interfaces;
+using BlockLuster.Common.Shared.ResponsesAndRequests;
 using BlockLuster.EntityFramework;
 using BlockLuster.Managers.Interfaces;
 
@@ -38,14 +39,49 @@ namespace BlockLuster.Managers.Managers
             return _movieAccessor.RemoveMovie(id);
         }
 
-        public void RentMovie(string movieId, string userId)
+        public List<Movie> RentMovie(RentMoviesRequest rentMoviesRequest)
         {
-            _movieAccessor.RentMovie(movieId, userId);
+            var rentedMovies = new List<Movie>();
+
+            foreach (var movieId in rentMoviesRequest.MovieIds)
+            {
+                _movieAccessor.RentMovie(movieId, rentMoviesRequest.UserId);
+                var movie = _movieAccessor.GetMovie(movieId);
+                movie.IsAvailable = false;
+                _movieAccessor.UpdateMovie(movie);
+                rentedMovies.Add(movie);
+            }
+            return rentedMovies;
+        }
+        public List<Movie> GetRentedMovies(string userId)
+        {
+            var rentals = _movieAccessor.UserRentals(userId);
+
+            var movies = new List<Movie>();
+            foreach (var rental in rentals)
+            {                
+                var movie = _movieAccessor.GetMovie(rental.MovieId);
+                movies.Add(movie);
+            }
+            return movies;
         }
 
-        public void ReturnMovie(string movieId, string userId) 
+        public List<Movie> ReturnMovie(string movieId, string userId) 
         {
             _movieAccessor.ReturnMovie(movieId, userId);
+            var movie = _movieAccessor.GetMovie(movieId);
+            movie.IsAvailable = true;
+            _movieAccessor.UpdateMovie(movie);
+
+            var rentals = _movieAccessor.UserRentals(userId);
+
+            var movies = new List<Movie>();
+            foreach (var rental in rentals)
+            {
+                var rentedMovie = _movieAccessor.GetMovie(rental.MovieId);
+                movies.Add(rentedMovie);
+            }
+            return movies; ;
         }
 
         public string TestMe(string input)

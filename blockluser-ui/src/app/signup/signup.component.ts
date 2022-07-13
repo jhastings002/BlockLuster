@@ -42,10 +42,7 @@ export class SignupComponent implements OnInit {
 
     var result = await this.apiService.SignUp(signupRequest);
     if (result) {
-      //this.router.navigate(['/']).then(() => window.location.reload());
-      this.router
-        .navigateByUrl('/', { skipLocationChange: true })
-        .then(() => this.router.navigate(['/']));
+      location.href = '/';
     } else {
       this.signupError = true;
     }

@@ -1,5 +1,6 @@
 ﻿using BlockLuster.Accessors.Interfaces;
 using BlockLuster.Common.SecurityService;
+using BlockLuster.Common.Shared.ResponsesAndRequests;
 using BlockLuster.EntityFramework;
 using BlockLuster.Managers.Interfaces;
 
@@ -15,7 +16,7 @@ namespace BlockLuster.Managers.Managers
             _securityService = securityService;
         }
 
-        public async Task<string> SignUpUserAsync(string firstName, string lastName, string email, string password)
+        public async Task<SigninResponse> SignUpUserAsync(string firstName, string lastName, string email, string password)
         {
             var user = new AspNetUser
             {
@@ -30,6 +31,25 @@ namespace BlockLuster.Managers.Managers
             await _securityService.SignUpAsync(user, password);
             return await _securityService.SignInAsync(user.Email, password);
             
+        }
+
+        public void UpdateProfile(string userId, string firstName, string lastName)
+        {
+            var user = new AspNetUser
+            {
+                Id = userId,
+                FirstName = firstName,
+                LastName = lastName,
+            };
+
+            _userAccessor.UpdateUser(user);
+
+        }
+
+        public async Task UpdatePassword(string userId, string oldPassword, string newPassword)
+        {
+            await _securityService.UpdatePassword(userId, oldPassword, newPassword);
+
         }
 
         public void DeactivateUser(string userId)

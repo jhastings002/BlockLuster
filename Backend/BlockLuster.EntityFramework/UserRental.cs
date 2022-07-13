@@ -4,6 +4,8 @@ namespace BlockLuster.EntityFramework
 {
     public partial class UserRental
     {
+        public long Id { get; set; }
+
         public string UserId { get; set; } = string.Empty;
 
         public string MovieId { get; set; } = string.Empty;

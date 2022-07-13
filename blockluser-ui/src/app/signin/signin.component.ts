@@ -38,7 +38,7 @@ export class SigninComponent implements OnInit {
 
     var result = await this.apiService.SignIn(signinRequest);
     if (result) {
-      this.router.navigateByUrl('/');
+      location.href = '/';
     } else {
       this.signinError = true;
     }
