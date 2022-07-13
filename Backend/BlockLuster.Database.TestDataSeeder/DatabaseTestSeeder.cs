@@ -45,7 +45,7 @@ namespace BlockLuster.Accessors.Tests
         // These will be as a new movie that was added, that is available
         // Leave 0 to not effect database
         [TestMethod]
-        [DataRow(10)]
+        [DataRow(0)]
         public void MovieAccessor_AddMovie_ShouldAddToDatabase(int numberOfRecords)
         {
             // ARRANGE
