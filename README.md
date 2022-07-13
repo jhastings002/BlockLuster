@@ -1,5 +1,8 @@
 # BlockLuster
 
+Jeffrey Hastings
+jeffhastings1@gmail.com
+
 Classic Video Rental Application
 
 This was created using Visual Studio 2022 and VSCode
